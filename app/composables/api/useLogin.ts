@@ -1,20 +1,64 @@
-import type { LoginUser } from "~/models/auth/login_res";
+import type { LoginResponse, LoginUser } from "~/models/auth/login_res";
 
 export function useLogin() {
   const { $api } = useNuxtApp();
+  const tokenCookie = useCookie("token");
 
-  // Login with email & password
-  const login = async (email: string, password: string) => {
-    const response = await $api.post<LoginUser>("/auth/login", {
-      email,
-      password,
-    });
-    console.log("Login response:", response.data);
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<LoginResponse> => {
+    try {
+      const response = await $api.post<LoginUser>("/auth/login", {
+        email,
+        password,
+      });
 
-    return response.data;
+      if (response.data?.token) {
+        tokenCookie.value = response.data.token;
+      }
+
+      return {
+        success: true,
+        user: response.data,
+        token: response.data.token ?? "",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        user: {} as LoginUser,
+        token: "",
+      };
+    }
+  };
+
+  const googleLogin = async (credential: string): Promise<LoginResponse> => {
+    try {
+      const response = await $api.post<LoginUser>("/auth/google-login", {
+        token: credential,
+      });
+
+      if (response.data?.token) {
+        tokenCookie.value = response.data.token;
+      }
+
+      return {
+        success: true,
+        user: response.data,
+        token: response.data.token ?? "",
+      };
+    } catch (error) {
+      console.error("Google login error:", error);
+      return {
+        success: false,
+        user: {} as LoginUser,
+        token: "",
+      };
+    }
   };
 
   return {
     login,
+    googleLogin,
   };
 }

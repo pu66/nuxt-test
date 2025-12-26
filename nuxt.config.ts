@@ -8,13 +8,29 @@ export default defineNuxtConfig({
     "@element-plus/nuxt",
     "@pinia/nuxt",
     "pinia-plugin-persistedstate/nuxt",
+    "nuxt-vue3-google-signin",
   ],
   css: ["~/assets/css/main.css"],
+
+  googleSignIn: {
+    clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || "",
+  },
+
+  runtimeConfig: {
+    public: {
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
+    },
+  },
 
   nitro: {
     preset: "firebase",
   },
 
+  routeRules: {
+    "/api/(auth|customer|payment)/**": {
+      proxy: "https://p66-novelrent.csmsu.net/**",
+    },
+  },
   //  nitro: {
   //   devProxy: {
   //     '/api': {
