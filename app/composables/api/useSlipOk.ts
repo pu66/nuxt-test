@@ -26,14 +26,27 @@
 import type { SlipPostResponse } from "~/models/slip/slip_res";
 
 export function useSlipOk() {
-  const checkSlip = async (file: File): Promise<SlipPostResponse> => {
+  const { $api } = useNuxtApp(); // ใช้ $api instance ที่คุณมี (ซึ่งชี้ไปที่ Go port 8080)
+
+  const checkSlip = async (file: File): Promise<any> => {
     const formData = new FormData();
     formData.append("files", file);
 
-    return await $fetch<SlipPostResponse>("/api/slipok", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await $api.post("/payment/verify-slip", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return {
+        success: response.data.RespCode === "200",
+        message: response.data.RespMessage,
+        ...response.data,
+      };
+    } catch (error) {
+      return { success: false, message: "Network Error" };
+    }
   };
 
   return { checkSlip };

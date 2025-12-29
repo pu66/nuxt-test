@@ -27,8 +27,9 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    "/api/(auth|customer|payment)/**": {
-      proxy: "https://p66-novelrent.csmsu.net/**",
+    "/backend/**": {
+      // proxy: "https://p66-novelrent.csmsu.net/**",
+      proxy: "http://localhost:8888/**",
     },
   },
   //  nitro: {

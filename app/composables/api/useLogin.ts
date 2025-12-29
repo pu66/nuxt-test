@@ -16,6 +16,7 @@ export function useLogin() {
 
       if (response.data?.token) {
         tokenCookie.value = response.data.token;
+        await navigateTo("/", { replace: true });
       }
 
       return {
@@ -40,6 +41,7 @@ export function useLogin() {
 
       if (response.data?.token) {
         tokenCookie.value = response.data.token;
+        await navigateTo("/payment/checkSlipOk", { replace: true });
       }
 
       return {
@@ -56,9 +58,14 @@ export function useLogin() {
       };
     }
   };
+  const logout = () => {
+    tokenCookie.value = null;
 
+    navigateTo("/auth/login");
+  };
   return {
     login,
     googleLogin,
+    logout,
   };
 }

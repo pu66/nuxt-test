@@ -120,11 +120,12 @@ const googleUser = ref<GoogleUser | null>(null);
 definePageMeta({
     layout: 'trip'
 })
-function handleAuthSuccess(result: any) {
+ async function handleAuthSuccess(result: any) {
  authStore.setUser(result.user); 
   appDataStore.setFullName(result.user.fullname);
   ElMessage.success("ยินดีต้อนรับ!");
-  navigateTo("/payment/checkSlipOk");
+    await navigateTo("/", { replace: true });
+
 }
 
 // Email & Password Login
