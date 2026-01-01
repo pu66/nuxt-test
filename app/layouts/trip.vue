@@ -11,7 +11,10 @@
           <el-button type="text" @click="navigateTo('/upload')">Upload</el-button> 
         <el-button type="text" @click="navigateTo('/payment/qr')">QR Code</el-button> 
         <el-button type="text" @click="navigateTo('/payment/checkslipok')">อัพสลิป</el-button> 
-<button @click="handleLogout" class="btn-logout">
+<el-button type="primary" @click="navigateTo('/read/31')">
+  อ่านเล่มนี้
+</el-button>
+        <button @click="handleLogout" class="btn-logout">
     ออกจากระบบ
   </button>
          <slot />
